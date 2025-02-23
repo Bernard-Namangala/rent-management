@@ -3,6 +3,7 @@
 import { type ReactNode, useState } from "react";
 import { Header } from "./header/Header";
 import { Sidebar } from "./sidebar/Sidebar";
+import { TenantSidebar } from "./sidebar/TenantSidebar";
 import { cn } from "@/lib/utils";
 
 export interface DashboardShellProps {
@@ -22,11 +23,18 @@ export function DashboardShell({ children, userType }: DashboardShellProps) {
           isSidebarCollapsed ? "w-[80px]" : "w-[280px]"
         )}
       >
-        <Sidebar
-          userType={userType}
-          isCollapsed={isSidebarCollapsed}
-          onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-        />
+        {userType === "tenant" ? (
+          <TenantSidebar
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          />
+        ) : (
+          <Sidebar
+            userType={userType}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          />
+        )}
       </div>
       <div
         className={cn(
