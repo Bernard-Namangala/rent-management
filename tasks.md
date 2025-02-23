@@ -325,19 +325,28 @@
   - [x] Rent range filter
   - [x] Payment status filter
 
-### Finances Page
+### Finances Page ✅
 
-- [ ] Financial overview
-  - [ ] Income summary
-  - [ ] Expense breakdown
-  - [ ] Cash flow chart
-- [ ] Transactions list
-  - [ ] Rent payments
-  - [ ] Expenses
-  - [ ] Maintenance costs
-- [ ] Payment processing
-- [ ] Financial reports
-- [ ] Export functionality
+- [x] Financial overview
+  - [x] Income summary
+  - [x] Expense breakdown
+  - [x] Cash flow chart
+  - [x] Key financial metrics
+- [x] Transactions list
+  - [x] Filter by type (income/expense/maintenance)
+  - [x] Search functionality
+  - [x] Sort by date, amount, category
+  - [x] Transaction details view
+- [x] Payment management
+  - [x] Record new payments
+  - [x] Payment categories
+  - [x] Payment status tracking
+  - [x] Payment history
+- [x] Financial reports
+  - [x] Export functionality
+  - [x] Date range selection
+  - [x] Category filters
+  - [x] Property-specific reports
 
 ### Maintenance Page
 
