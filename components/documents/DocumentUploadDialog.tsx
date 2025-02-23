@@ -1,9 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { Upload, X, FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,181 +19,150 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { Upload, Loader2, X } from "lucide-react";
 
 interface DocumentUploadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onUpload: (
+    file: File,
+    category: string,
+    description: string
+  ) => Promise<void>;
 }
-
-interface FileWithPreview extends File {
-  preview?: string;
-}
-
-const categories = [
-  { value: "leases", label: "Leases" },
-  { value: "contracts", label: "Contracts" },
-  { value: "maintenance", label: "Maintenance" },
-  { value: "financial", label: "Financial" },
-];
 
 export function DocumentUploadDialog({
   open,
   onOpenChange,
+  onUpload,
 }: DocumentUploadDialogProps) {
-  const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const [category, setCategory] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [description, setDescription] = useState("");
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles(
-      acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      )
-    );
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    multiple: true,
-    accept: {
-      "application/pdf": [".pdf"],
-      "image/*": [".png", ".jpg", ".jpeg"],
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-        ".xlsx",
-      ],
-      "text/csv": [".csv"],
-    },
-  });
-
-  const handleUpload = async () => {
-    if (!category || files.length === 0) return;
-
-    setUploading(true);
-    try {
-      // TODO: Implement actual file upload logic
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      onOpenChange(false);
-      setFiles([]);
-      setCategory("");
-    } catch (error) {
-      console.error("Error uploading files:", error);
-    } finally {
-      setUploading(false);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
     }
   };
 
-  const removeFile = (index: number) => {
-    setFiles((prevFiles) => {
-      const newFiles = [...prevFiles];
-      if (newFiles[index].preview) {
-        URL.revokeObjectURL(newFiles[index].preview!);
-      }
-      newFiles.splice(index, 1);
-      return newFiles;
-    });
+  const handleUpload = async () => {
+    if (!file || !category) return;
+
+    setIsLoading(true);
+    try {
+      await onUpload(file, category, description);
+      onOpenChange(false);
+      // Reset form
+      setFile(null);
+      setCategory("");
+      setDescription("");
+    } catch (error) {
+      console.error("Error uploading document:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Upload Documents</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Upload className="h-5 w-5" />
+            Upload Document
+          </DialogTitle>
           <DialogDescription>
-            Upload documents to your property management system. Supported
-            formats: PDF, Images, Excel, and CSV.
+            Upload a document to your tenant portal
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-6">
+          {/* File Upload */}
           <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
+            <Label>Document File</Label>
+            {file ? (
+              <div className="flex items-center justify-between rounded-lg border p-2">
+                <div className="flex items-center gap-2">
+                  <Upload className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{file.name}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setFile(null)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center rounded-lg border border-dashed p-4">
+                <label
+                  htmlFor="file-upload"
+                  className="flex cursor-pointer flex-col items-center gap-2"
+                >
+                  <Upload className="h-8 w-8 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    Click to upload or drag and drop
+                  </span>
+                  <Input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  />
+                </label>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Supported formats: PDF, DOC, DOCX, JPG, JPEG, PNG
+            </p>
+          </div>
+
+          {/* Document Category */}
+          <div className="space-y-2">
+            <Label>Category</Label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.value} value={category.value}>
-                    {category.label}
-                  </SelectItem>
-                ))}
+                <SelectItem value="lease">Lease</SelectItem>
+                <SelectItem value="policies">Building Policies</SelectItem>
+                <SelectItem value="insurance">Insurance</SelectItem>
+                <SelectItem value="forms">Forms</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div
-            {...getRootProps()}
-            className={cn(
-              "relative flex min-h-[150px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed p-6 text-center transition-colors",
-              isDragActive
-                ? "border-primary bg-muted/50"
-                : "border-muted-foreground/25 hover:bg-muted/50"
-            )}
-          >
-            <input {...getInputProps()} />
-            <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
-            <div className="text-sm text-muted-foreground">
-              {isDragActive ? (
-                <p>Drop the files here ...</p>
-              ) : (
-                <p>
-                  Drag & drop files here, or click to select files
-                  <br />
-                  <span className="text-xs">
-                    Supported formats: PDF, Images, Excel, CSV
-                  </span>
-                </p>
-              )}
-            </div>
+          {/* Description */}
+          <div className="space-y-2">
+            <Label htmlFor="description">Description (Optional)</Label>
+            <Input
+              id="description"
+              placeholder="Enter a brief description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </div>
-
-          {files.length > 0 && (
-            <div className="space-y-2">
-              <Label>Selected Files</Label>
-              <div className="space-y-2">
-                {files.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between rounded-lg border p-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">{file.name}</span>
-                      <span className="text-xs text-muted-foreground">
-                        ({Math.round(file.size / 1024)} KB)
-                      </span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                      onClick={() => removeFile(index)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         <DialogFooter>
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            disabled={uploading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <Button
             onClick={handleUpload}
-            disabled={!category || files.length === 0 || uploading}
+            disabled={!file || !category || isLoading}
           >
-            {uploading ? "Uploading..." : "Upload"}
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Upload Document
           </Button>
         </DialogFooter>
       </DialogContent>
