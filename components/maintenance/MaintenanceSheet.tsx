@@ -24,7 +24,7 @@ import {
 interface MaintenanceSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (request: any) => void;
+  onSubmit: (request: any) => Promise<void>;
 }
 
 export function MaintenanceSheet({
@@ -32,180 +32,143 @@ export function MaintenanceSheet({
   onOpenChange,
   onSubmit,
 }: MaintenanceSheetProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     property: "",
-    category: "",
     priority: "",
-    images: [] as File[],
+    category: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
     try {
       await onSubmit(formData);
-      onOpenChange(false);
       setFormData({
         title: "",
         description: "",
         property: "",
-        category: "",
         priority: "",
-        images: [],
+        category: "",
       });
     } catch (error) {
       console.error("Error submitting request:", error);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-lg">
+      <SheetContent className="sm:max-w-[540px]">
         <SheetHeader>
           <SheetTitle>New Maintenance Request</SheetTitle>
           <SheetDescription>
-            Create a new maintenance request. Fill in all the required details
-            below.
+            Create a new maintenance request. Fill out all required fields.
           </SheetDescription>
         </SheetHeader>
-
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
+              name="title"
               placeholder="Brief description of the issue"
               value={formData.title}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, title: e.target.value }))
-              }
+              onChange={handleChange}
               required
             />
           </div>
-
-          {/* Description */}
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
+              name="description"
               placeholder="Detailed description of the maintenance issue"
               value={formData.description}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
+              onChange={handleChange}
               required
-              className="min-h-[100px]"
             />
           </div>
-
-          {/* Property */}
           <div className="space-y-2">
             <Label htmlFor="property">Property</Label>
             <Select
               value={formData.property}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, property: value }))
-              }
+              onValueChange={(value) => handleSelectChange("property", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select property" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="property1">
-                  Sunset Apartments #204
-                </SelectItem>
-                <SelectItem value="property2">Downtown Lofts #102</SelectItem>
-                <SelectItem value="property3">
-                  Park View Heights #305
-                </SelectItem>
+                <SelectItem value="property1">123 Main St, Apt 4B</SelectItem>
+                <SelectItem value="property2">456 Oak Ave, Unit 2</SelectItem>
+                <SelectItem value="property3">789 Pine Rd, Suite 3</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          {/* Category */}
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Select
-              value={formData.category}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, category: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="plumbing">Plumbing</SelectItem>
-                <SelectItem value="electrical">Electrical</SelectItem>
-                <SelectItem value="hvac">HVAC</SelectItem>
-                <SelectItem value="appliance">Appliance</SelectItem>
-                <SelectItem value="structural">Structural</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="priority">Priority</Label>
+              <Select
+                value={formData.priority}
+                onValueChange={(value) => handleSelectChange("priority", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => handleSelectChange("category", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="plumbing">Plumbing</SelectItem>
+                  <SelectItem value="electrical">Electrical</SelectItem>
+                  <SelectItem value="hvac">HVAC</SelectItem>
+                  <SelectItem value="appliance">Appliance</SelectItem>
+                  <SelectItem value="structural">Structural</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-
-          {/* Priority */}
-          <div className="space-y-2">
-            <Label htmlFor="priority">Priority</Label>
-            <Select
-              value={formData.priority}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, priority: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Image Upload */}
-          <div className="space-y-2">
-            <Label htmlFor="images">Images</Label>
-            <Input
-              id="images"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files || []);
-                setFormData((prev) => ({ ...prev, images: files }));
-              }}
-              className="cursor-pointer"
-            />
-            <p className="text-xs text-muted-foreground">
-              Upload images of the issue (optional)
-            </p>
-          </div>
-
-          {/* Submit Button */}
           <div className="flex justify-end gap-4 pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create Request
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Submit Request
             </Button>
           </div>
         </form>

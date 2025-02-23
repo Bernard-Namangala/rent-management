@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -10,7 +13,6 @@ import {
 } from "@/components/ui/select";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { addDays } from "date-fns";
-import { useState } from "react";
 
 interface DateRange {
   from: Date | undefined;
@@ -18,100 +20,121 @@ interface DateRange {
 }
 
 export function MaintenanceFilters() {
-  const [date, setDate] = useState<DateRange>({
-    from: undefined,
-    to: undefined,
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: new Date(),
+    to: addDays(new Date(), 7),
   });
 
+  const [filters, setFilters] = useState({
+    property: "",
+    priority: "",
+    category: "",
+    assignee: "",
+  });
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleReset = () => {
+    setFilters({
+      property: "",
+      priority: "",
+      category: "",
+      assignee: "",
+    });
+    setDateRange({
+      from: new Date(),
+      to: addDays(new Date(), 7),
+    });
+  };
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {/* Property Filter */}
-      <div className="space-y-2">
-        <Label>Property</Label>
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="All properties" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All properties</SelectItem>
-            <SelectItem value="sunset">Sunset Apartments</SelectItem>
-            <SelectItem value="downtown">Downtown Lofts</SelectItem>
-            <SelectItem value="parkview">Park View Heights</SelectItem>
-          </SelectContent>
-        </Select>
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="property">Property</Label>
+          <Select
+            value={filters.property}
+            onValueChange={(value) => handleSelectChange("property", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select property" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="property1">123 Main St, Apt 4B</SelectItem>
+              <SelectItem value="property2">456 Oak Ave, Unit 2</SelectItem>
+              <SelectItem value="property3">789 Pine Rd, Suite 3</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="priority">Priority</Label>
+          <Select
+            value={filters.priority}
+            onValueChange={(value) => handleSelectChange("priority", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select priority" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Category Filter */}
-      <div className="space-y-2">
-        <Label>Category</Label>
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="All categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All categories</SelectItem>
-            <SelectItem value="plumbing">Plumbing</SelectItem>
-            <SelectItem value="electrical">Electrical</SelectItem>
-            <SelectItem value="hvac">HVAC</SelectItem>
-            <SelectItem value="appliance">Appliance</SelectItem>
-            <SelectItem value="structural">Structural</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="category">Category</Label>
+          <Select
+            value={filters.category}
+            onValueChange={(value) => handleSelectChange("category", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="plumbing">Plumbing</SelectItem>
+              <SelectItem value="electrical">Electrical</SelectItem>
+              <SelectItem value="hvac">HVAC</SelectItem>
+              <SelectItem value="appliance">Appliance</SelectItem>
+              <SelectItem value="structural">Structural</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="assignee">Assignee</Label>
+          <Select
+            value={filters.assignee}
+            onValueChange={(value) => handleSelectChange("assignee", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select assignee" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="unassigned">Unassigned</SelectItem>
+              <SelectItem value="john">John Smith</SelectItem>
+              <SelectItem value="jane">Jane Doe</SelectItem>
+              <SelectItem value="mike">Mike Johnson</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Priority Filter */}
       <div className="space-y-2">
-        <Label>Priority</Label>
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Any priority" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Any priority</SelectItem>
-            <SelectItem value="low">Low</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="high">High</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Status Filter */}
-      <div className="space-y-2">
-        <Label>Status</Label>
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Any status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Any status</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="in-progress">In Progress</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-            <SelectItem value="urgent">Urgent</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Date Range */}
-      <div className="space-y-2 md:col-span-2">
         <Label>Date Range</Label>
-        <DatePickerWithRange date={date} setDate={setDate} />
+        <DatePickerWithRange date={dateRange} setDate={setDateRange} />
       </div>
 
-      {/* Sort By */}
-      <div className="space-y-2">
-        <Label>Sort By</Label>
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Most Recent" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="recent">Most Recent</SelectItem>
-            <SelectItem value="oldest">Oldest First</SelectItem>
-            <SelectItem value="priority-high">Priority: High to Low</SelectItem>
-            <SelectItem value="priority-low">Priority: Low to High</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={handleReset}>
+          Reset Filters
+        </Button>
+        <Button>Apply Filters</Button>
       </div>
     </div>
   );
