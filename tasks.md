@@ -451,16 +451,26 @@
 
 ### Maintenance Page
 
-- [ ] Maintenance requests list
-- [ ] Request details
-  - [ ] Issue description
-  - [ ] Photos/attachments
-  - [ ] Status updates
-  - [ ] Communication thread
-- [ ] Create request form
-- [ ] Assign contractors
-- [ ] Track progress
-- [ ] Cost management
+- [x] Request Management
+  - [x] Submit new request
+  - [x] Track existing requests
+  - [x] Request history
+  - [x] Emergency requests
+- [x] Request Form
+  - [x] Issue description
+  - [x] Priority selection
+  - [x] Photo/video upload
+  - [x] Preferred time slots
+- [x] Request Tracking
+  - [x] Status updates
+  - [x] Maintenance schedule
+  - [x] Communication thread
+  - [x] Satisfaction rating
+- [x] History & Reports
+  - [x] Past requests log
+  - [x] Resolution timeline
+  - [x] Maintenance calendar
+  - [x] Property condition reports
 
 ### Shared Features for All Pages
 
@@ -558,26 +568,26 @@ Would you like to proceed with:
 
 ### Maintenance Page
 
-- [ ] Request Management
-  - [ ] Submit new request
-  - [ ] Track existing requests
-  - [ ] Request history
-  - [ ] Emergency requests
-- [ ] Request Form
-  - [ ] Issue description
-  - [ ] Priority selection
-  - [ ] Photo/video upload
-  - [ ] Preferred time slots
-- [ ] Request Tracking
-  - [ ] Status updates
-  - [ ] Maintenance schedule
-  - [ ] Communication thread
-  - [ ] Satisfaction rating
-- [ ] History & Reports
-  - [ ] Past requests log
-  - [ ] Resolution timeline
-  - [ ] Maintenance calendar
-  - [ ] Property condition reports
+- [x] Request Management
+  - [x] Submit new request
+  - [x] Track existing requests
+  - [x] Request history
+  - [x] Emergency requests
+- [x] Request Form
+  - [x] Issue description
+  - [x] Priority selection
+  - [x] Photo/video upload
+  - [x] Preferred time slots
+- [x] Request Tracking
+  - [x] Status updates
+  - [x] Maintenance schedule
+  - [x] Communication thread
+  - [x] Satisfaction rating
+- [x] History & Reports
+  - [x] Past requests log
+  - [x] Resolution timeline
+  - [x] Maintenance calendar
+  - [x] Property condition reports
 
 ### Lease & Documents
 
