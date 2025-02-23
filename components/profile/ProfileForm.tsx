@@ -1,149 +1,251 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { UserCircle2 } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
+import { Camera } from "lucide-react";
 
-export interface ProfileField {
-  name: string;
-  label: string;
-  placeholder: string;
-  type?: string;
-}
+const profileSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  emergencyContact: z.string().min(2, "Emergency contact name is required"),
+  emergencyPhone: z.string().min(10, "Emergency contact phone is required"),
+});
 
-export interface ProfileFormProps {
-  userType: "landlord" | "tenant" | "admin";
-  additionalFields?: ProfileField[];
-}
-
-const baseFields: ProfileField[] = [
-  {
-    name: "name",
-    label: "Full Name",
-    placeholder: "Enter your full name",
-  },
-  {
-    name: "email",
-    label: "Email",
-    placeholder: "Enter your email",
-    type: "email",
-  },
-  {
-    name: "phone",
-    label: "Phone Number",
-    placeholder: "Enter your phone number",
-    type: "tel",
-  },
-  {
-    name: "address",
-    label: "Address",
-    placeholder: "Enter your address",
-  },
-];
+type ProfileFormProps = {
+  userType: "tenant" | "landlord";
+  additionalFields?: Array<{
+    name: string;
+    label: string;
+    placeholder: string;
+    type?: string;
+  }>;
+};
 
 export function ProfileForm({
   userType,
   additionalFields = [],
 }: ProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState("/placeholder-avatar.png");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof profileSchema>>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      emergencyContact: "",
+      emergencyPhone: "",
+    },
+  });
+
+  async function handleSubmit(values: z.infer<typeof profileSchema>) {
     setIsLoading(true);
     try {
       // TODO: Implement profile update logic
+      console.log(values);
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error("Error updating profile:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // TODO: Implement avatar upload logic
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
+      reader.onload = (e) => {
+        setAvatarUrl(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile Photo</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center gap-4">
-          <div className="relative h-32 w-32">
-            {profileImage ? (
-              <img
-                src={profileImage}
-                alt="Profile"
-                className="h-full w-full rounded-full object-cover"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
-                <UserCircle2 className="h-16 w-16 text-muted-foreground" />
-              </div>
-            )}
-          </div>
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => document.getElementById("photo-upload")?.click()}
-            >
-              Change Photo
-            </Button>
-            {profileImage && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setProfileImage(null)}
-              >
-                Remove Photo
-              </Button>
-            )}
-          </div>
-          <input
-            id="photo-upload"
+    <div className="space-y-8">
+      {/* Avatar Section */}
+      <div className="flex items-center gap-x-6">
+        <Avatar className="h-24 w-24">
+          <AvatarImage src={avatarUrl} alt="Profile" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div>
+          <Label
+            htmlFor="avatar-upload"
+            className="inline-flex cursor-pointer items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            <Camera className="mr-2 h-4 w-4" />
+            Change Photo
+          </Label>
+          <Input
+            id="avatar-upload"
             type="file"
             accept="image/*"
             className="hidden"
-            onChange={handleImageUpload}
+            onChange={handleAvatarChange}
           />
-        </CardContent>
-      </Card>
+          <p className="mt-2 text-sm text-muted-foreground">
+            JPG, GIF or PNG. Max size of 2MB.
+          </p>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {[...baseFields, ...additionalFields].map((field) => (
-            <div key={field.name} className="space-y-2">
-              <Label htmlFor={field.name}>{field.label}</Label>
-              <Input
-                id={field.name}
-                name={field.name}
-                type={field.type || "text"}
-                placeholder={field.placeholder}
+      {/* Profile Form */}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your first name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your last name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your email"
+                      type="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your phone number"
+                      type="tel"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {userType === "tenant" && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="emergencyContact"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Emergency Contact</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter emergency contact name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="emergencyPhone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Emergency Contact Phone</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter emergency contact phone"
+                          type="tel"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+
+            {additionalFields.map((field) => (
+              <FormField
+                key={field.name}
+                control={form.control}
+                name={field.name as any}
+                render={({ field: formField }) => (
+                  <FormItem>
+                    <FormLabel>{field.label}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={field.placeholder}
+                        type={field.type || "text"}
+                        {...formField}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          ))}
-          <div className="flex justify-end">
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Saving..." : "Save Changes"}
-            </Button>
+            ))}
           </div>
-        </CardContent>
-      </Card>
-    </form>
+
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Saving..." : "Save Changes"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }

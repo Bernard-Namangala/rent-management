@@ -632,49 +632,49 @@ Would you like to proceed with:
 
 ### Profile & Settings
 
-- [ ] Personal Information
-  - [ ] Contact details
-  - [ ] Emergency contacts
-  - [ ] Vehicle information
-  - [ ] Pet information
-- [ ] Account Settings
-  - [ ] Password management
-  - [ ] 2FA setup
-  - [ ] Notification preferences
-  - [ ] Language preferences
-- [ ] Payment Settings
-  - [ ] Default payment method
-  - [ ] Auto-pay configuration
-  - [ ] Payment notifications
-  - [ ] Bank account/card management
-- [ ] Privacy Settings
-  - [ ] Information sharing
-  - [ ] Directory listing
-  - [ ] Communication preferences
-  - [ ] Data management
+- [x] Personal Information
+  - [x] Contact details
+  - [x] Emergency contacts
+  - [x] Vehicle information
+  - [x] Pet information
+- [x] Account Settings
+  - [x] Password management
+  - [x] 2FA setup
+  - [x] Notification preferences
+  - [x] Language preferences
+- [x] Payment Settings
+  - [x] Default payment method
+  - [x] Auto-pay configuration
+  - [x] Payment notifications
+  - [x] Bank account/card management
+- [x] Privacy Settings
+  - [x] Information sharing
+  - [x] Directory listing
+  - [x] Communication preferences
+  - [x] Data management
 
 ### Shared Features
 
-- [ ] Responsive Design
-  - [ ] Mobile optimization
-  - [ ] Tablet layout
-  - [ ] Desktop view
-  - [ ] Print-friendly pages
-- [ ] Accessibility
-  - [ ] Screen reader support
-  - [ ] Keyboard navigation
-  - [ ] High contrast mode
-  - [ ] Font size controls
-- [ ] Performance
-  - [ ] Loading states
-  - [ ] Error handling
-  - [ ] Offline support
-  - [ ] Data caching
-- [ ] Integration
-  - [ ] Calendar sync
-  - [ ] Document storage
-  - [ ] Payment processing
-  - [ ] Notification system
+- [x] Responsive Design
+  - [x] Mobile optimization
+  - [x] Tablet layout
+  - [x] Desktop view
+  - [x] Print-friendly pages
+- [x] Accessibility
+  - [x] Screen reader support
+  - [x] Keyboard navigation
+  - [x] High contrast mode
+  - [x] Font size controls
+- [x] Performance
+  - [x] Loading states
+  - [x] Error handling
+  - [x] Offline support
+  - [x] Data caching
+- [x] Integration
+  - [x] Calendar sync
+  - [x] Document storage
+  - [x] Payment processing
+  - [x] Notification system
 
 ### Navigation and Layout
 

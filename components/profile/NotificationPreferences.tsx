@@ -1,115 +1,104 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Bell, Mail, MessageSquare, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-export interface NotificationPreferencesProps {
-  userType: "landlord" | "tenant" | "admin";
-  additionalCategories?: string[];
-}
-
-interface NotificationChannel {
-  id: string;
-  label: string;
-  description: string;
-  enabled: boolean;
-}
+import { toast } from "sonner";
 
 interface NotificationCategory {
   id: string;
-  label: string;
+  title: string;
   description: string;
-  enabled: boolean;
+  icon: React.ReactNode;
+  channels: {
+    email: boolean;
+    push: boolean;
+    sms: boolean;
+  };
 }
 
-const baseChannels: NotificationChannel[] = [
-  {
-    id: "email",
-    label: "Email Notifications",
-    description: "Receive notifications via email",
-    enabled: true,
-  },
-  {
-    id: "push",
-    label: "Push Notifications",
-    description: "Receive notifications on your devices",
-    enabled: true,
-  },
-  {
-    id: "sms",
-    label: "SMS Notifications",
-    description: "Receive notifications via text message",
-    enabled: false,
-  },
-];
-
-const baseCategories: NotificationCategory[] = [
-  {
-    id: "updates",
-    label: "Platform Updates",
-    description: "Important updates about RentEase",
-    enabled: true,
-  },
-  {
-    id: "security",
-    label: "Security Alerts",
-    description: "Security-related notifications",
-    enabled: true,
-  },
-  {
-    id: "marketing",
-    label: "Marketing",
-    description: "News and special offers",
-    enabled: false,
-  },
-];
+interface NotificationPreferencesProps {
+  userType: "tenant" | "landlord";
+  additionalCategories?: string[];
+}
 
 export function NotificationPreferences({
   userType,
   additionalCategories = [],
 }: NotificationPreferencesProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [channels, setChannels] = useState(baseChannels);
-  const [categories, setCategories] = useState([
-    ...baseCategories,
-    ...additionalCategories.map((category) => ({
-      id: category.toLowerCase().replace(/\s+/g, "-"),
-      label: category,
-      description: `Notifications for ${category.toLowerCase()}`,
-      enabled: true,
-    })),
+  const [categories, setCategories] = useState<NotificationCategory[]>([
+    {
+      id: "maintenance",
+      title: "Maintenance Updates",
+      description:
+        "Get notified about maintenance request updates and scheduling",
+      icon: <MessageSquare className="h-5 w-5" />,
+      channels: { email: true, push: true, sms: false },
+    },
+    {
+      id: "payments",
+      title: "Payment Reminders",
+      description:
+        "Receive reminders about upcoming rent payments and confirmations",
+      icon: <Bell className="h-5 w-5" />,
+      channels: { email: true, push: true, sms: true },
+    },
+    {
+      id: "announcements",
+      title: "Building Announcements",
+      description: "Stay informed about important building updates and notices",
+      icon: <Mail className="h-5 w-5" />,
+      channels: { email: true, push: false, sms: false },
+    },
+    {
+      id: "community",
+      title: "Community Events",
+      description: "Get updates about community events and activities",
+      icon: <Phone className="h-5 w-5" />,
+      channels: { email: false, push: true, sms: false },
+    },
   ]);
-  const [frequency, setFrequency] = useState("realtime");
 
-  const handleChannelToggle = (channelId: string) => {
-    setChannels((prev) =>
-      prev.map((channel) =>
-        channel.id === channelId
-          ? { ...channel, enabled: !channel.enabled }
-          : channel
-      )
-    );
-  };
-
-  const handleCategoryToggle = (categoryId: string) => {
+  const handleChannelToggle = (
+    categoryId: string,
+    channel: keyof NotificationCategory["channels"]
+  ) => {
     setCategories((prev) =>
-      prev.map((category) =>
-        category.id === categoryId
-          ? { ...category, enabled: !category.enabled }
-          : category
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? {
+              ...cat,
+              channels: {
+                ...cat.channels,
+                [channel]: !cat.channels[channel],
+              },
+            }
+          : cat
       )
     );
   };
 
-  const handleSave = async () => {
+  const handleSavePreferences = async () => {
     setIsLoading(true);
     try {
       // TODO: Implement save preferences logic
+      console.log("Saving preferences:", categories);
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Notification preferences saved successfully");
+    } catch (error) {
+      console.error("Error saving preferences:", error);
+      toast.error("Failed to save notification preferences");
     } finally {
       setIsLoading(false);
     }
@@ -117,80 +106,58 @@ export function NotificationPreferences({
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Notification Channels</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {channels.map((channel) => (
-            <div
-              key={channel.id}
-              className="flex items-center justify-between space-x-4"
-            >
-              <div className="flex-1 space-y-1">
-                <p className="font-medium">{channel.label}</p>
-                <p className="text-sm text-muted-foreground">
-                  {channel.description}
-                </p>
+      {categories.map((category) => (
+        <Card key={category.id}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {category.icon}
+              {category.title}
+            </CardTitle>
+            <CardDescription>{category.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="flex items-center space-x-4">
+                  <Switch
+                    id={`${category.id}-email`}
+                    checked={category.channels.email}
+                    onCheckedChange={() =>
+                      handleChannelToggle(category.id, "email")
+                    }
+                  />
+                  <Label htmlFor={`${category.id}-email`}>Email</Label>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Switch
+                    id={`${category.id}-push`}
+                    checked={category.channels.push}
+                    onCheckedChange={() =>
+                      handleChannelToggle(category.id, "push")
+                    }
+                  />
+                  <Label htmlFor={`${category.id}-push`}>
+                    Push Notifications
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Switch
+                    id={`${category.id}-sms`}
+                    checked={category.channels.sms}
+                    onCheckedChange={() =>
+                      handleChannelToggle(category.id, "sms")
+                    }
+                  />
+                  <Label htmlFor={`${category.id}-sms`}>SMS</Label>
+                </div>
               </div>
-              <Switch
-                checked={channel.enabled}
-                onCheckedChange={() => handleChannelToggle(channel.id)}
-              />
             </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Notification Categories</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {categories.map((category) => (
-            <div
-              key={category.id}
-              className="flex items-center justify-between space-x-4"
-            >
-              <div className="flex-1 space-y-1">
-                <p className="font-medium">{category.label}</p>
-                <p className="text-sm text-muted-foreground">
-                  {category.description}
-                </p>
-              </div>
-              <Switch
-                checked={category.enabled}
-                onCheckedChange={() => handleCategoryToggle(category.id)}
-              />
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Notification Frequency</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <RadioGroup value={frequency} onValueChange={setFrequency}>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="realtime" id="realtime" />
-              <Label htmlFor="realtime">Real-time</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="daily" id="daily" />
-              <Label htmlFor="daily">Daily digest</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="weekly" id="weekly" />
-              <Label htmlFor="weekly">Weekly summary</Label>
-            </div>
-          </RadioGroup>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      ))}
 
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading}>
+        <Button onClick={handleSavePreferences} disabled={isLoading}>
           {isLoading ? "Saving..." : "Save Preferences"}
         </Button>
       </div>
