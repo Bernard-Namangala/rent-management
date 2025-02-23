@@ -614,16 +614,16 @@ Would you like to proceed with:
 
 ### Messages & Communication
 
-- [ ] Messaging Center
-  - [ ] Landlord communication
-  - [ ] Maintenance chat
-  - [ ] Building announcements
-  - [ ] Emergency contacts
-- [ ] Notification Preferences
-  - [ ] Email notifications
-  - [ ] SMS alerts
-  - [ ] Push notifications
-  - [ ] Important reminders
+- [x] Messaging Center
+  - [x] Landlord communication (UI only)
+  - [x] Maintenance chat (UI only)
+  - [x] Building announcements (UI only)
+  - [x] Emergency contacts
+- [x] Notification Preferences
+  - [ ] Email notifications (backend required)
+  - [ ] SMS alerts (backend required)
+  - [ ] Push notifications (backend required)
+  - [x] Important reminders (UI only)
 - [ ] Community Board
   - [ ] Building updates
   - [ ] Community events
@@ -684,3 +684,11 @@ Would you like to proceed with:
 - [x] Quick access links
 
 Would you like to start implementing any specific section of the tenant dashboard?
+
+### Integration Features (Pending Backend)
+
+- [ ] Real-time updates with WebSocket
+- [ ] File upload/download functionality
+- [ ] Voice/Video call integration
+- [ ] Email/SMS notification system
+- [ ] Message persistence and history
