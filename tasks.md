@@ -630,7 +630,7 @@ Would you like to proceed with:
   - [ ] Neighbor directory
   - [ ] Service recommendations
 
-### Profile & Settings
+### Profile & Settings ✅
 
 - [x] Personal Information
   - [x] Contact details
@@ -652,6 +652,29 @@ Would you like to proceed with:
   - [x] Directory listing
   - [x] Communication preferences
   - [x] Data management
+
+### Units Management
+
+- [ ] Unit Listing
+  - [ ] Grid/List view
+  - [ ] Unit details
+  - [ ] Occupancy status
+  - [ ] Maintenance status
+- [ ] Unit Details
+  - [ ] Photos and floor plans
+  - [ ] Amenities
+  - [ ] Pricing history
+  - [ ] Maintenance history
+- [ ] Unit Management
+  - [ ] Add/Edit units
+  - [ ] Set pricing
+  - [ ] Assign tenants
+  - [ ] Schedule maintenance
+- [ ] Unit Features
+  - [ ] Photo gallery
+  - [ ] Virtual tours
+  - [ ] Floor plans
+  - [ ] Amenity list
 
 ### Shared Features
 
