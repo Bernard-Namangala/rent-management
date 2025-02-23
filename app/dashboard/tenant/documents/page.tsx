@@ -23,7 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { DocumentSignDialog } from "@/components/documents/DocumentSignDialog";
-import { DocumentUploadDialog } from "@/components/documents/DocumentUploadDialog";
+import { DocumentUploadSheet } from "@/components/documents/DocumentUploadSheet";
 import { toast } from "sonner";
 
 type ViewMode = "grid" | "list";
@@ -333,8 +333,8 @@ export default function TenantDocumentsPage() {
         </Tabs>
       </Card>
 
-      {/* Document Upload Dialog */}
-      <DocumentUploadDialog
+      {/* Document Upload Sheet */}
+      <DocumentUploadSheet
         open={isUploadDialogOpen}
         onOpenChange={setIsUploadDialogOpen}
         onUpload={handleUpload}
