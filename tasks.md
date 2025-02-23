@@ -591,26 +591,26 @@ Would you like to proceed with:
 
 ### Lease & Documents
 
-- [ ] Lease Information
-  - [ ] Current lease terms
-  - [ ] Renewal status
-  - [ ] Important dates
-  - [ ] Occupant details
-- [ ] Document Center
-  - [ ] Lease documents
-  - [ ] Building policies
-  - [ ] Insurance information
-  - [ ] Move-in/out forms
-- [ ] Document Management
-  - [ ] Upload documents
-  - [ ] Sign documents
-  - [ ] Download/print options
-  - [ ] Document sharing
-- [ ] Notifications
-  - [ ] Lease expiration alerts
-  - [ ] Document updates
-  - [ ] Policy changes
-  - [ ] Renewal offers
+- [x] Lease Information
+  - [x] Current lease terms
+  - [x] Renewal status
+  - [x] Important dates
+  - [x] Occupant details
+- [x] Document Center
+  - [x] Lease documents
+  - [x] Building policies
+  - [x] Insurance information
+  - [x] Move-in/out forms
+- [x] Document Management
+  - [x] Upload documents
+  - [x] Sign documents
+  - [x] Download/print options
+  - [x] Document sharing
+- [x] Notifications
+  - [x] Lease expiration alerts
+  - [x] Document updates
+  - [x] Policy changes
+  - [x] Renewal offers
 
 ### Messages & Communication
 
