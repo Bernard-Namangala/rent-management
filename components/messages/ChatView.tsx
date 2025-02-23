@@ -13,6 +13,7 @@ import {
   Phone,
   Video,
   Info,
+  MessageSquare,
 } from "lucide-react";
 
 interface Message {
@@ -86,8 +87,15 @@ export function ChatView({ chatId, groupId }: ChatViewProps) {
 
   if (!chatId && !groupId) {
     return (
-      <div className="h-full flex items-center justify-center text-muted-foreground">
-        Select a conversation to start messaging
+      <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+          <MessageSquare className="h-6 w-6 text-primary" />
+        </div>
+        <h3 className="mt-4 text-lg font-semibold">Welcome to Messages</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Connect with your property management team, landlord, and fellow
+          residents. Select a conversation to start messaging.
+        </p>
       </div>
     );
   }
