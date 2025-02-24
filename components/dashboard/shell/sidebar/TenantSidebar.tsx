@@ -9,7 +9,7 @@ import {
   MessageSquare,
   Settings,
   Building2,
-  Menu,
+  PanelLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -82,20 +82,28 @@ export function TenantSidebar({
 
   return (
     <>
-      <div className="flex h-16 items-center justify-between px-4">
+      <div className="flex h-16 items-center justify-between px-2">
         {!isCollapsed && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 px-2">
             <img src="/logo.svg" alt="Logo" className="h-8 w-8" />
             <span className="font-semibold">RentEase</span>
           </div>
         )}
         <Button
           variant="ghost"
-          size="icon"
-          className="h-8 w-8 hover:bg-primary/5"
+          size={isCollapsed ? "icon" : "default"}
+          className={cn(
+            "flex h-9 items-center hover:bg-primary/5",
+            isCollapsed ? "aspect-square w-full justify-center" : "justify-end"
+          )}
           onClick={onToggleCollapse}
         >
-          <Menu className="h-4 w-4" />
+          <PanelLeft
+            className={cn(
+              "h-4 w-4 transition-transform",
+              isCollapsed && "rotate-180"
+            )}
+          />
         </Button>
       </div>
       <ScrollArea className="flex-1 overflow-auto">
@@ -108,8 +116,10 @@ export function TenantSidebar({
                 variant="ghost"
                 size={isCollapsed ? "icon" : "default"}
                 className={cn(
-                  "relative flex w-full items-center justify-start gap-2 transition-all hover:-translate-y-0.5",
-                  isCollapsed && "aspect-square",
+                  "relative flex w-full items-center gap-2 transition-all hover:-translate-y-0.5",
+                  isCollapsed
+                    ? "justify-center aspect-square"
+                    : "justify-start",
                   active
                     ? "bg-primary/10 text-primary hover:bg-primary/15"
                     : "hover:bg-primary/5",
@@ -137,8 +147,8 @@ export function TenantSidebar({
               variant="ghost"
               size={isCollapsed ? "icon" : "default"}
               className={cn(
-                "relative flex w-full items-center justify-start gap-2 transition-all hover:-translate-y-0.5",
-                isCollapsed && "aspect-square",
+                "relative flex w-full items-center gap-2 transition-all hover:-translate-y-0.5",
+                isCollapsed ? "justify-center aspect-square" : "justify-start",
                 active
                   ? "bg-primary/10 text-primary hover:bg-primary/15"
                   : "hover:bg-primary/5",
