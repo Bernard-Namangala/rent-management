@@ -1,0 +1,14 @@
+const CHUNK_PUBLIC_PATH = "server/app/dashboard/landlord/page.js";
+const runtime = require("../../../chunks/ssr/[turbopack]_runtime.js");
+runtime.loadChunk("server/chunks/ssr/08b5e_next_dist_97f32f._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__3646c0._.js");
+runtime.loadChunk("server/chunks/ssr/app_83a60b._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__ef2236._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__bcea0d._.css");
+runtime.loadChunk("server/chunks/ssr/08b5e_ce97a5._.js");
+runtime.loadChunk("server/chunks/ssr/08b5e_next_dist_client_components_forbidden-error_b4e556.js");
+runtime.loadChunk("server/chunks/ssr/08b5e_next_dist_client_components_unauthorized-error_d758e6.js");
+runtime.loadChunk("server/chunks/ssr/app_dashboard_landlord_layout_tsx_e5e926._.js");
+runtime.loadChunk("server/chunks/ssr/[project]__3235dd._.js");
+runtime.getOrInstantiateRuntimeModule("[project]/frontend/.next-internal/server/app/dashboard/landlord/page/actions.js [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
+module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/dashboard/landlord/page { METADATA_0 => \"[project]/frontend/app/favicon.ico.mjs { IMAGE => \\\"[project]/frontend/app/favicon.ico [app-rsc] (static)\\\" } [app-rsc] (structured image object, ecmascript, Next.js server component)\", MODULE_1 => \"[project]/frontend/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_3 => \"[project]/node_modules/next/dist/client/components/forbidden-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_4 => \"[project]/node_modules/next/dist/client/components/unauthorized-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_5 => \"[project]/frontend/app/dashboard/landlord/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_6 => \"[project]/frontend/app/dashboard/landlord/page.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;

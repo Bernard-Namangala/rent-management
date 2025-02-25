@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  LANDLORD
+  TENANT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      UserRole
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Landlord relations
+  ownedProperties Property[] @relation("PropertyOwner")
+  
+  // Tenant relations
+  rentedUnits    Unit[]     @relation("UnitTenant")
+  
+  // Common relations
+  maintenanceRequests MaintenanceRequest[] @relation("RequestCreator")
+  payments           Payment[]            @relation("PaymentCreator")
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  ownerId     String
+  owner       User     @relation("PropertyOwner", fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  units       Unit[]
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  number      String
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
+  tenantId    String?
+  tenant      User?    @relation("UnitTenant", fields: [tenantId], references: [id])
+  rent        Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  maintenanceRequests MaintenanceRequest[]
+  leases              Lease[]
+  payments            Payment[]
+}
+
+model Lease {
+  id        String   @id @default(cuid())
+  unitId    String
+  unit      Unit     @relation(fields: [unitId], references: [id])
+  startDate DateTime
+  endDate   DateTime
+  rentAmount Float
+  deposit    Float
+  status     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model MaintenanceRequest {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  status      String
+  priority    String
+  unitId      String
+  unit        Unit     @relation(fields: [unitId], references: [id])
+  creatorId   String
+  creator     User     @relation("RequestCreator", fields: [creatorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  amount      Float
+  status      String
+  type        String
+  unitId      String
+  unit        Unit     @relation(fields: [unitId], references: [id])
+  creatorId   String
+  creator     User     @relation("PaymentCreator", fields: [creatorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+} 

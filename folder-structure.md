@@ -174,3 +174,108 @@ components/ui/
    - Responsive components
    - Touch-friendly interfaces
    - Mobile-specific layouts
+
+# Folder Structure
+
+```
+rent/
+├── frontend/                  # Move current Next.js frontend here
+│   ├── app/
+│   ├── components/
+│   └── ...
+│
+├── backend/                   # NestJS backend application
+│   ├── src/
+│   │   ├── config/           # Configuration files
+│   │   │   ├── database.config.ts
+│   │   │   └── jwt.config.ts
+│   │   │
+│   │   ├── common/           # Shared code
+│   │   │   ├── decorators/
+│   │   │   ├── filters/
+│   │   │   ├── guards/
+│   │   │   ├── interceptors/
+│   │   │   └── pipes/
+│   │   │
+│   │   ├── modules/          # Feature modules
+│   │   │   ├── auth/         # Authentication module
+│   │   │   │   ├── dto/
+│   │   │   │   ├── entities/
+│   │   │   │   ├── guards/
+│   │   │   │   ├── strategies/
+│   │   │   │   └── auth.service.ts
+│   │   │   │
+│   │   │   ├── users/        # Users module
+│   │   │   ├── properties/   # Properties module
+│   │   │   ├── tenants/      # Tenants module
+│   │   │   ├── leases/       # Leases module
+│   │   │   ├── payments/     # Payments module
+│   │   │   ├── maintenance/  # Maintenance module
+│   │   │   └── documents/    # Documents module
+│   │   │
+│   │   ├── prisma/          # Prisma schema and migrations
+│   │   │   ├── schema.prisma
+│   │   │   └── migrations/
+│   │   │
+│   │   ├── utils/           # Utility functions
+│   │   ├── types/           # TypeScript types/interfaces
+│   │   ├── app.module.ts    # Root application module
+│   │   └── main.ts          # Application entry point
+│   │
+│   ├── test/                # Test files
+│   │   ├── e2e/
+│   │   └── unit/
+│   │
+│   ├── docs/                # Backend documentation
+│   ├── .env                 # Environment variables
+│   ├── .env.example         # Example environment variables
+│   ├── nest-cli.json       # NestJS CLI configuration
+│   ├── package.json        # Backend dependencies
+│   └── tsconfig.json       # TypeScript configuration
+│
+├── shared/                  # Shared code between frontend and backend
+│   ├── types/              # Shared TypeScript interfaces
+│   └── constants/          # Shared constants
+│
+├── docs/                    # Project documentation
+├── .github/                 # GitHub workflows
+├── package.json            # Root package.json for workspaces
+└── README.md               # Project overview
+```
+
+## Key Points
+
+1. **Monorepo Structure**
+
+   - Frontend and backend in single repository
+   - Shared types and constants
+   - Easier deployment and version control
+
+2. **Backend Organization**
+
+   - Module-based architecture
+   - Clear separation of concerns
+   - Easy to scale and maintain
+
+3. **Shared Code**
+
+   - Common types between frontend and backend
+   - Consistent data structures
+   - DRY principle
+
+4. **Documentation**
+
+   - Separate docs for frontend and backend
+   - API documentation
+   - Setup guides
+
+5. **Testing**
+
+   - Dedicated test directories
+   - Separate unit and e2e tests
+   - Test utilities and mocks
+
+6. **Configuration**
+   - Environment-based configuration
+   - Secure credential management
+   - Easy to switch between environments
